@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Gemini AI Chatbot</title>
+    <meta name="description" content="Login ke Gemini AI Chatbot menggunakan akun Google Anda.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-page">
+    <!-- Animated background particles -->
+    <div class="login-bg">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <div class="login-container">
+        <div class="login-card">
+            <!-- Logo -->
+            <div class="login-logo">
+                <span class="logo-sparkle-lg"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
+            </div>
+            
+            <h1 class="login-title">Selamat Datang</h1>
+            <p class="login-subtitle">Masuk untuk mulai menggunakan Gemini AI Chatbot</p>
+
+            <!-- Divider -->
+            <div class="login-divider">
+                <span>Masuk dengan</span>
+            </div>
+
+            <!-- Google Login Button -->
+            <a href="/auth/google" class="google-login-btn" id="google-login-btn">
+                <img src="https://www.google.com/favicon.ico" alt="Google" class="google-icon">
+                Lanjutkan dengan Google
+            </a>
+
+            <p class="login-terms">
+                Dengan masuk, Anda menyetujui <a href="#">Syarat & Ketentuan</a> dan <a href="#">Kebijakan Privasi</a> kami.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // If Google OAuth not configured, show warning and skip to demo
+        fetch('/api/user')
+            .then(r => r.json())
+            .then(data => {
+                if (data.demo) {
+                    // Demo mode: redirect to main app
+                    window.location.href = '/';
+                }
+            });
+    </script>
+</body>
+</html>

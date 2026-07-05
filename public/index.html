@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini AI Chatbot</title>
+    <meta name="description" content="Chatbot AI pintar berbasis Google Gemini yang mendukung teks, gambar, dan suara.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-sparkle"><i class="fa-solid fa-sparkles"></i></span>
+                    <h1>Gemini Chat</h1>
+                </div>
+                <button class="new-chat-btn" id="new-chat-btn">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Obrolan Baru</span>
+                </button>
+            </div>
+            <div class="sidebar-content">
+                <div class="section-title">Riwayat</div>
+                <div class="history-list" id="history-list">
+                    <div class="history-item active">
+                        <i class="fa-regular fa-message"></i>
+                        <span>Percakapan Saat Ini</span>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar-footer">
+                <div class="nav-item">
+                    <i class="fa-regular fa-circle-question"></i>
+                    <span>Bantuan</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fa-regular fa-gear"></i>
+                    <span>Setelan</span>
+                </div>
+                <!-- User Profile & Logout -->
+                <div class="user-info-sidebar" id="user-info-sidebar">
+                    <img src="" alt="User" class="user-sidebar-photo" id="user-sidebar-photo">
+                    <div class="user-sidebar-text">
+                        <div class="user-sidebar-name" id="user-sidebar-name">Memuat...</div>
+                        <div class="user-sidebar-email" id="user-sidebar-email"></div>
+                    </div>
+                    <a href="/auth/logout" class="logout-btn" id="logout-btn" title="Keluar">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-area">
+            <header class="chat-header">
+                <div class="header-left">
+                    <button class="menu-toggle-btn" id="menu-toggle-btn">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <div class="model-badge">
+                        <span class="model-dot"></span>
+                        Gemini 2.5 Flash
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="user-profile">
+                        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Felix" alt="User Avatar" class="avatar" id="header-avatar">
+                    </div>
+                </div>
+            </header>
+
+            <div class="conversation-container" id="conversation-container">
+                <!-- Welcome View -->
+                <div class="welcome-container" id="welcome-container">
+                    <div class="welcome-sparkle"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <h2 id="welcome-title">Halo, ada yang bisa saya bantu hari ini?</h2>
+                    <p class="welcome-subtitle">Tanyakan apa saja. Ketik teks, kirim gambar, atau gunakan suara!</p>
+                    <div class="quick-prompts">
+                        <div class="prompt-card" onclick="fillInput('Jelaskan apa itu Gemini API dengan bahasa yang mudah dipahami.')">
+                            <div class="card-icon"><i class="fa-solid fa-lightbulb"></i></div>
+                            <div class="card-title">Jelaskan konsep</div>
+                            <div class="card-text">Apa itu Gemini API?</div>
+                        </div>
+                        <div class="prompt-card" onclick="fillInput('Buatkan kode sederhana HTML dan CSS untuk membuat tombol dengan efek hover mengkilap.')">
+                            <div class="card-icon"><i class="fa-solid fa-code"></i></div>
+                            <div class="card-title">Tulis kode</div>
+                            <div class="card-text">Tombol hover CSS modern</div>
+                        </div>
+                        <div class="prompt-card" onclick="fillInput('Berikan rekomendasi destinasi wisata tersembunyi di Indonesia yang menakjubkan.')">
+                            <div class="card-icon"><i class="fa-solid fa-compass"></i></div>
+                            <div class="card-title">Rekomendasi</div>
+                            <div class="card-text">Destinasi wisata Indonesia</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat messages -->
+                <div id="chat-box" class="chat-box"></div>
+            </div>
+
+            <!-- Input Footer -->
+            <footer class="chat-footer">
+                <!-- Image Preview Area -->
+                <div class="image-preview-area" id="image-preview-area" style="display:none;">
+                    <div class="preview-wrapper">
+                        <img id="image-preview-thumb" src="" alt="Preview">
+                        <button type="button" class="remove-image-btn" id="remove-image-btn">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <form id="chat-form" class="chat-form-container">
+                    <div class="input-wrapper" id="input-wrapper">
+                        <input type="text" id="user-input" placeholder="Ketik pesan, atau gunakan mic/gambar..." autocomplete="off">
+                        <div class="input-actions">
+                            <!-- Mic Button for Voice Note -->
+                            <button type="button" class="action-btn" id="mic-btn" title="Rekam Suara">
+                                <i class="fa-solid fa-microphone" id="mic-icon"></i>
+                            </button>
+                            <!-- Image Upload Button -->
+                            <button type="button" class="action-btn" id="image-btn" title="Kirim Gambar">
+                                <i class="fa-solid fa-image"></i>
+                            </button>
+                            <!-- Hidden File Input -->
+                            <input type="file" id="image-file-input" accept="image/jpeg,image/png,image/gif,image/webp" style="display:none;">
+                        </div>
+                    </div>
+                    <button type="submit" class="send-btn" id="send-button" title="Kirim">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </form>
+                <div class="disclaimer">
+                    Gemini dapat membuat kesalahan. Harap verifikasi informasi penting.
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

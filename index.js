@@ -144,9 +144,13 @@ app.post('/api/chat', isAuthenticated, async (req, res) => {
 });
 
 // ─── Start Server ─────────────────────────────────────────────────────────────
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`✅ Server berjalan di http://localhost:${PORT}`);
-  const googleConfigured = process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_ID !== 'your_google_client_id_here';
-  console.log(`🔐 Google Login: ${googleConfigured ? 'AKTIF' : 'BELUM DIKONFIGURASI (mode demo)'}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`✅ Server berjalan di http://localhost:${PORT}`);
+    const googleConfigured = process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_ID !== 'your_google_client_id_here';
+    console.log(`🔐 Google Login: ${googleConfigured ? 'AKTIF' : 'BELUM DIKONFIGURASI (mode demo)'}`);
+  });
+}
+
+export default app;

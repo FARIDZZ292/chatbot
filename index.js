@@ -3,7 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import session from 'express-session';
+import cookieSession from 'cookie-session';
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { GoogleGenAI } from '@google/genai';
@@ -19,18 +19,20 @@ const GEMINI_MODEL = 'gemini-2.5-flash';
 app.use(cors());
 app.use(express.json({ limit: '20mb' }));
 
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'fallback_secret',
-  resave: false,
-  saveUninitialized: false,
-  cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 1 day
+app.set('trust proxy', 1); // trust first proxy for Vercel
+
+app.use(cookieSession({
+  name: 'session',
+  keys: [process.env.SESSION_SECRET || 'fallback_secret'],
+  maxAge: 24 * 60 * 60 * 1000 // 1 day
 }));
 
 // ─── Passport / Google OAuth Setup ───────────────────────────────────────────
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: 'http://localhost:3000/auth/google/callback'
+  callbackURL: '/auth/google/callback',
+  proxy: true
 }, (accessToken, refreshToken, profile, done) => {
   // Store relevant user info
   const user = {
